@@ -142,4 +142,56 @@ document.addEventListener('DOMContentLoaded', () => {
             renderGallery();
         }
     });
+
+    // Show more/less functionality
+    const showMoreButtons = document.querySelectorAll('.show-more');
+    showMoreButtons.forEach(button => {
+        let isExpanded = false;
+        button.addEventListener('click', () => {
+            const parent = button.closest('.about-text') || button.closest('.amenities');
+            if (parent.classList.contains('about-text')) {
+                const textContainer = parent;
+                if (!isExpanded) {
+                    const additionalText = document.createElement('p');
+                    additionalText.textContent = 'Additional details: This resort offers unparalleled luxury with personalized service, gourmet dining options, and exclusive access to premium amenities. Guests can enjoy private beach areas, yacht charters, and bespoke experiences tailored to individual preferences.';
+                    textContainer.insertBefore(additionalText, button);
+                    button.textContent = 'Show less';
+                } else {
+                    const additionalP = textContainer.querySelectorAll('p')[2]; // The added one
+                    if (additionalP) additionalP.remove();
+                    button.textContent = 'Show more';
+                }
+                isExpanded = !isExpanded;
+            } else if (parent.classList.contains('amenities')) {
+                const grid = parent.querySelector('.amenity-grid');
+                if (!isExpanded) {
+                    const additionalItems = [
+                        { text: 'Full Spa Access' },
+                        { text: '24/7 Gym' },
+                        { text: 'Concierge Service' },
+                        { text: 'High-Speed WiFi' }
+                    ];
+                    additionalItems.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'amenity-item';
+                        div.innerHTML = `
+                            <span class="icon">
+                                <img src="/images/soaking_tubs.png">
+                            </span>
+                            ${item.text}
+                        `;
+                        grid.appendChild(div);
+                    });
+                    button.textContent = 'Show less';
+                } else {
+                    const items = grid.querySelectorAll('.amenity-item');
+                    for (let i = items.length - 1; i >= 9; i--) { // Remove added ones (original has 9)
+                        items[i].remove();
+                    }
+                    button.textContent = 'Show more';
+                }
+                isExpanded = !isExpanded;
+            }
+        });
+    });
 });
