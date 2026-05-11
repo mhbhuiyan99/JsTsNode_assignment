@@ -8,11 +8,182 @@
 }
 
 
+
+@media (max-width: 1024px) {
+
+    /* Stack the sidebar under the main content */
+    .page-wrapper {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .sidebar-right {
+        width: 100%;
+        /* Sidebar takes full width */
+        position: static;
+        /* Remove the sticky behavior */
+    }
+
+    /* Reduce large paddings */
+    .nav,
+    .path,
+    .resort-name,
+    .resort-rating {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .main-footer {
+        padding: 40px 20px;
+        /* Reduce massive side padding */
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-columns {
+        flex-direction: column;
+        gap: 30px;
+        width: 100%;
+    }
+
+    .caribbean-subgrid {
+        flex-direction: column;
+        /* Stack the two Caribbean lists */
+        gap: 0;
+    }
+
+    .newsletter-form {
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        background: transparent;
+        /* Move background to the input/button */
+    }
+
+    .newsletter-form input {
+        border-radius: 50px;
+        margin-bottom: 10px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .nav-left,
+    .nav-right {
+        display: none;
+    }
+
+    .nav-center {
+        position: static;
+        transform: none;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .nav {
+        flex-direction: column;
+        height: auto;
+        /* Allow nav to expand vertically */
+        padding: 15px;
+        gap: 10px;
+    }
+
+
+
+
+    .path,
+    .resort-name,
+    .resort-rating {
+        padding-left: 20px;
+        padding-right: 20px;
+        text-align: left;
+    }
+
+    .resort-name {
+        font-size: 24px;
+        /* Make text smaller for mobile screens */
+    }
+
+    /* Footer responsiveness */
+
+    .main-footer {
+        padding: 40px 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .footer-bottom,
+    .footer-columns,
+    .caribbean-subgrid {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .hero-section {
+        /* Force to one column so the hero-main fills the width */
+        grid-template-columns: 1fr;
+        height: 300px;
+        /* Adjust height for mobile */
+    }
+
+    .hero-grid {
+        /* This hides the 4 smaller images on the right */
+        display: none !important;
+    }
+
+    .hero-main {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Change About section and Amenity grids to 1 column */
+    .about-body,
+    .amenity-grid,
+    .highlight-grid,
+    .amenities-columns,
+    .activities-grid,
+    .reviews-grid,
+    .policies-grid {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+
+}
+
+
+
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: var(--bg);
     font-family: 'Jost', sans-serif;
+}
+
+html.modal-open,
+body.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+.modal,
+.modal-content,
+.gallery-view {
+    touch-action: auto;
 }
 
 .star {
@@ -38,22 +209,22 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px 180px;
-    height: 40px;
-    margin-bottom: 20px;
+    padding: 0 5%;
+    height: 70px;
+    position: relative;
 
 }
 
 .nav-left {
+    flex: 1;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
 }
 
 .nav-left .menu-icon {
     border: 1px solid white;
     border-radius: 50%;
-    padding: 5px 10px;
 }
 
 .nav-center {
@@ -66,10 +237,14 @@ body {
 }
 
 .nav-right {
-    color: white;
     display: flex;
     gap: 15px;
     align-items: center;
+}
+
+.nav-center img {
+    height: 50px;
+    /* Keep logo size consistent */
 }
 
 .nav-right a {
@@ -86,11 +261,19 @@ body {
     color: white;
 }
 
+@media (max-width: 768px) {
+
+    .nav .nav-left,
+    .nav .nav-right {
+        display: none;
+    }
+}
+
 
 
 /* ---- Path ---- */
 .path {
-    padding: 10px 220px;
+    padding: 10px 5%;
     font-size: 14px;
 }
 
@@ -120,11 +303,11 @@ body {
 .resort-name {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-weight: 350;
-    padding-left: 220px;
+    padding-left: 20px 5%;
 }
 
 .resort-rating {
-    padding-left: 220px;
+    padding-left: 5%;
     margin: 4px;
     font-size: 14px;
 }
@@ -191,6 +374,180 @@ body {
     align-items: center;
     gap: 8px;
     color: white;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(168, 207, 207, 0.9);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-content {
+    position: relative;
+    width: min(100%, 980px);
+    max-width: 980px;
+    max-height: 90vh;
+    background: #142225;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+}
+
+.close-modal,
+.prev-btn,
+.next-btn {
+    cursor: pointer;
+}
+
+.close-modal {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    color: white;
+    font-size: 32px;
+    line-height: 1;
+    z-index: 2;
+}
+
+.image-counter {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    color: white;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 8px 12px;
+    border-radius: 999px;
+    z-index: 2;
+}
+
+.gallery-view {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 70vh;
+    background: #000;
+}
+
+.gallery-img {
+    width: 100%;
+    max-height: calc(90vh - 120px);
+    object-fit: contain;
+}
+
+.prev-btn,
+.next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 26px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.prev-btn:hover,
+.next-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.prev-btn {
+    left: 18px;
+}
+
+.next-btn {
+    right: 18px;
+}
+
+/* PC scrollable gallery */
+@media (min-width: 769px) {
+    .gallery-view {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        scroll-snap-type: y mandatory;
+        gap: 20px;
+        padding: 20px;
+        place-items: unset;
+        max-height: calc(90vh - 120px);
+    }
+
+    .gallery-img {
+        flex-shrink: 0;
+        width: 100%;
+        height: auto;
+        max-height: none;
+        scroll-snap-align: start;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal {
+        padding: 12px;
+    }
+
+    .modal-content {
+        width: 100%;
+        max-height: 85vh;
+    }
+
+    .gallery-view {
+        min-height: 54vh;
+    }
+
+    .prev-btn,
+    .next-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
+    }
+
+    .image-counter {
+        top: 12px;
+        left: 12px;
+        font-size: 13px;
+        padding: 7px 10px;
+    }
+}
+
+/* PC scrollable gallery */
+@media (min-width: 769px) {
+    .gallery-view {
+        display: flex;
+        flex-direction: column;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 20px;
+        padding: 20px;
+        place-items: unset;
+    }
+
+    .gallery-img {
+        flex-shrink: 0;
+        width: auto;
+        max-width: 80vw;
+        height: auto;
+        max-height: calc(90vh - 120px);
+        scroll-snap-align: center;
+    }
 }
 
 
@@ -456,12 +813,13 @@ body {
     margin-bottom: 18px;
 }
 
+
+
 .amenity-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    row-gap: 0px;
-    column-gap: 0px;
-    margin-bottom: 20px;
+    /* This will automatically wrap items when they get smaller than 200px */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
 }
 
 .amenity-item {
