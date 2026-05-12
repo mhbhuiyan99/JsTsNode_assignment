@@ -18,20 +18,21 @@ app.get('/get-property', (req, res) => {
         'lowest_price': 'lowest_price.json'
     };
 
-    const fileName = fileMap[sortType];
-    // UPDATED: Path now points to the 'data' folder
-    const filePath = path.join(__dirname, 'data', fileName);
+    const filePath = path.join(__dirname, 'data', fileMap[sortType]);
 
     fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error("File Read Error:", err);
-            return res.status(500).json({ error: "Data file not found" });
-        }
+        if (err) return res.status(500).json({ error: "Data file not found" });
         
         try {
             const jsonData = JSON.parse(data);
-            const items = jsonData.Result.Items.slice(0, limit);
-            res.json(items);
+            const allItems = jsonData.Result.Items; // Full list for markers
+            const gridItems = allItems.slice(0, limit); // Limited list for cards
+            
+            // Send as an object instead of an array
+            res.json({
+                all: allItems,
+                grid: gridItems
+            });
         } catch (parseErr) {
             res.status(500).json({ error: "Error parsing JSON" });
         }

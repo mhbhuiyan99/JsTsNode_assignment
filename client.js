@@ -6,7 +6,6 @@ let map;
 let markers = {};
 
 // --- 1. Platform & Limit Detection ---
-// Desktop gets 6 items, Tablet/Mobile gets 4 items per your requirement.
 const getLimit = () => (window.innerWidth <= 1024 ? 4 : 6);
 
 // --- 2. Map Initialization ---
@@ -15,74 +14,77 @@ async function initMap() {
         const response = await fetch('/map-config');
         const config = await response.json();
         
-        // Safety check for Office Map API library
-        if (typeof OfficeMapAPI !== 'undefined') {
-            map = new OfficeMapAPI.Map(document.getElementById('live-map'), {
-                center: { lat: 39.82, lng: -98.57 },
-                zoom: 4,
-                apiKey: config.apiKey
-            });
-        } else {
-            // Placeholder content if API is not available outside office
-            const mapContainer = document.getElementById('live-map');
-            if (mapContainer) {
-                mapContainer.innerHTML = `
-                    <div style="padding:20px; text-align:center; color:#666; background:#eee; height:100%;">
-                        <p><strong>Office Map API Placeholder</strong></p>
-                        <p>Hover over cards to see location logs in console.</p>
-                    </div>`;
-            }
+        if (!config.apiKey) {
+            console.error("API Key missing from .env");
+            return;
         }
+
+        // Clean quotes and inject Google Script
+        const cleanKey = config.apiKey.replace(/['"]+/g, '');
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${cleanKey}&callback=setupGoogleMap`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+
+        window.setupGoogleMap = () => {
+            map = new google.maps.Map(document.getElementById('live-map'), {
+                center: { lat: 39.82, lng: -98.57 },
+                zoom: 4
+            });
+            fetchProperties(); // Load properties only after map is ready
+        };
     } catch (e) {
-        console.error("Map config fetch failed:", e);
+        console.error("Map initialization failed:", e);
     }
 }
 
-// --- 3. Property Data Fetching ---
+
+
+// Updated fetch function
 async function fetchProperties() {
     const sortType = sortSelector ? sortSelector.value : 'most_popular';
     const limit = getLimit();
-    
     try {
         const response = await fetch(`/get-property?sort=${sortType}&limit=${limit}`);
-        if (!response.ok) throw new Error('API fetch failed');
-        
-        const items = await response.json();
-        renderProperties(items);
+        const data = await response.json(); // data is now {all, grid}
+        renderProperties(data);
     } catch (error) {
         console.error("Fetch Error:", error);
-        if (propertyGrid) {
-            propertyGrid.innerHTML = "<p>Error loading properties. Ensure the server is running.</p>";
-        }
     }
 }
 
-// --- 4. Rendering Logic ---
 function renderProperties(items) {
     if (!propertyGrid) return;
     
-    // Retrieve favorites from LocalStorage
     const favorites = JSON.parse(localStorage.getItem('fav_resorts')) || [];
     
-    // Clear existing markers before re-rendering
+    // 1. Clear old markers from the map before re-rendering
+    Object.values(markers).forEach(m => m.setMap(null));
     markers = {};
 
+    // 2. Create map markers for ALL items in the current dataset
+    items.forEach(item => syncMarker(item));
+
+    // 3. Render HTML only for the properties that should be visible in the grid
+    // Note: The 'items' array already comes limited from the server-side API
     propertyGrid.innerHTML = items.map(item => {
         const isFav = favorites.includes(item.ID);
         const imgUrl = `${IMAGE_SERVICE_URL}${item.Property.FeatureImage}`;
-        
-        // Create marker in memory/map if API exists
-        syncMarker(item);
 
         return `
             <article class="hotel-card" 
+                     id="tile-${item.ID}"
                      onmouseenter="highlightMarker('${item.ID}', true)" 
                      onmouseleave="highlightMarker('${item.ID}', false)">
+                
                 <div class="image-container">
-                    <img src="${imgUrl}" alt="${item.Property.PropertyName}" onerror="this.src='https://via.placeholder.com/640x300?text=No+Image'">
+                    <img src="${imgUrl}" alt="${item.Property.PropertyName}" 
+                         onerror="this.src='https://via.placeholder.com/640x300?text=No+Image'">
                     <span class="price-tag">From $${Math.floor(item.Property.Price).toLocaleString()}</span>
                     
-                    <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${item.ID}')">
+                    <button class="fav-btn ${isFav ? 'active' : ''}" 
+                            onclick="toggleFavorite(event, '${item.ID}')">
                         ${isFav ? '❤️' : '🤍'}
                     </button>
                 </div>
@@ -104,64 +106,80 @@ function renderProperties(items) {
     }).join('');
 }
 
-// --- 5. Marker & Interaction Logic ---
+const ICON_RED = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
+const ICON_BLUE = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+
 function syncMarker(item) {
-    if (typeof OfficeMapAPI === 'undefined' || !map) return;
+    if (typeof google === 'undefined' || !map) return;
     
-    markers[item.ID] = new OfficeMapAPI.Marker({
-        position: { lat: parseFloat(item.GeoInfo.Lat), lng: parseFloat(item.GeoInfo.Lng) },
+    const lat = parseFloat(item.GeoInfo.Lat);
+    const lng = parseFloat(item.GeoInfo.Lng);
+
+    const marker = new google.maps.Marker({
+        position: { lat, lng },
         map: map,
+        icon: ICON_RED, // Default color
         title: item.Property.PropertyName
     });
+
+    // Handle marker clicks to highlight the tile in the grid
+    marker.addListener('click', () => {
+        // Reset all pins to Red
+        Object.values(markers).forEach(m => m.setIcon(ICON_RED));
+        // Set this specific pin to Blue
+        marker.setIcon(ICON_BLUE);
+        
+        const tile = document.getElementById(`tile-${item.ID}`);
+        if (tile) {
+            tile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            tile.classList.add('highlight-active');
+            setTimeout(() => tile.classList.remove('highlight-active'), 3000);
+        }
+    });
+
+    markers[item.ID] = marker;
 }
 
 window.highlightMarker = (id, isHovering) => {
-    if (isHovering) console.log(`Highlighting Marker: ${id}`);
-    
     const marker = markers[id];
     if (!marker) return;
 
-    // Trigger office-specific marker animations
     if (isHovering) {
-        marker.setAnimation('BOUNCE'); 
+        marker.setIcon(ICON_BLUE); // Blue on select
+        marker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+        if (map) map.panTo(marker.getPosition());
     } else {
-        marker.setAnimation(null);
+        marker.setIcon(ICON_RED); // Red on unselect
+        marker.setZIndex(1);
     }
 };
 
-// --- 6. Favorite (LocalStorage) Logic ---
-window.toggleFavorite = (event, id) => {
-    // Prevent the click from triggering other card events
-    event.stopPropagation();
 
-    let favorites = JSON.parse(localStorage.getItem('fav_resorts')) || [];
-    
-    if (favorites.includes(id)) {
-        favorites = favorites.filter(favId => favId !== id);
-    } else {
-        favorites.push(id);
+// Internal function to scroll to and highlight the grid tile
+function highlightTile(id) {
+    const tile = document.getElementById(`tile-${id}`);
+    if (tile) {
+        // Clear any previous highlights
+        document.querySelectorAll('.hotel-card').forEach(card => card.classList.remove('highlight-active'));
+        
+        // Visual focus
+        tile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        tile.classList.add('highlight-active');
+        
+        // Temporary effect
+        setTimeout(() => tile.classList.remove('highlight-active'), 3000);
     }
-    
-    localStorage.setItem('fav_resorts', JSON.stringify(favorites));
-    
-    // Refresh the current view to update the heart icon
-    fetchProperties();
-};
-
-// --- 7. Event Listeners & Initialization ---
-if (sortSelector) {
-    sortSelector.addEventListener('change', fetchProperties);
 }
 
-// Handle window resizing for responsive limits
-let resizeDebounce;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeDebounce);
-    resizeDebounce = setTimeout(fetchProperties, 300);
-});
+// --- 6. Favorite Logic ---
+window.toggleFavorite = (event, id) => {
+    event.stopPropagation();
+    let favorites = JSON.parse(localStorage.getItem('fav_resorts')) || [];
+    favorites = favorites.includes(id) ? favorites.filter(f => f !== id) : [...favorites, id];
+    localStorage.setItem('fav_resorts', JSON.stringify(favorites));
+    fetchProperties(); // Re-render to update heart
+};
 
-// Start everything once DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    initMap();
-    fetchProperties();
-});
+// --- 7. Listeners ---
+if (sortSelector) sortSelector.addEventListener('change', fetchProperties);
+document.addEventListener('DOMContentLoaded', initMap);

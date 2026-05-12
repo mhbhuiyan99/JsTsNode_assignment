@@ -703,8 +703,8 @@
       </aside>
     </div>
 
-    <div>
-      <section class="nearby-properties">
+    <div class="page-wrapper nearby-layout"> 
+    <section class="nearby-properties content-left">
         <div class="header-row">
             <h2>Other All-Inclusive Resorts You May Like Nearby</h2>
             <div class="controls">
@@ -716,13 +716,22 @@
                 </select>
             </div>
         </div>
-
-        <div id="property-grid" class="cards-wrapper">
-            </div>
+        <div id="property-grid" class="resort-grid"></div> 
     </section>
 
     <script src="client.js"></script>
-    </div>
+
+    <aside class="sidebar-right sticky-map-wrapper">
+        <div class="map-card">
+            <div class="map-header">
+                <h3>Resort Location</h3>
+            </div>
+            <div id="live-map" class="map-container"></div>
+        </div>
+    </aside>
+</div>
+
+
 
     <footer class="main-footer">
       <div class="newsletter-container">
