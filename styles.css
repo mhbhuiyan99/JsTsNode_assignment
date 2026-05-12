@@ -7,9 +7,7 @@
   --h2_col: #333131;
 }
 
-/* ----------------------------------------------
-   DESKTOP-FIRST BASE (992px and up)
----------------------------------------------- */
+
 body {
   margin: 0;
   font-family: "Jost", sans-serif;
@@ -176,9 +174,9 @@ body.modal-open {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
+  background: white;
+  color: #041d1c;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 40px;
   padding: 10px 18px;
   font-size: 14px;
@@ -186,6 +184,7 @@ body.modal-open {
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .view-photos-btn img {
@@ -325,6 +324,42 @@ body.modal-open {
   font-weight: bold;
 }
 
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.clear-btn,
+.submit-btn {
+  width: 100%;
+  border: none;
+  border-radius: 40px;
+  padding: 12px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.clear-btn {
+  background: #ffffff;
+  color: #041d1c;
+  border: 1px solid var(--border);
+}
+
+.clear-btn:hover {
+  background: #f5f5f5;
+}
+
+.submit-btn {
+  background: #2f60ff;
+  color: #ffffff;
+}
+
+.submit-btn:hover {
+  background: #1c44d8;
+}
+
 .check-btn {
   width: 100%;
   background: #f7862a;
@@ -341,9 +376,49 @@ body.modal-open {
   background: var(--navy);
 }
 
+.datepicker-popup-actions {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px 16px;
+  background: #ffffff;
+  border-top: 1px solid var(--border);
+}
+
+.datepicker-popup-actions button {
+  flex: 1;
+  border: none;
+  border-radius: 40px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.datepicker-popup-actions .datepicker-popup-clear {
+  background: #ffffff;
+  color: #041d1c;
+  border: 1px solid var(--border);
+}
+
+.datepicker-popup-actions .datepicker-popup-clear:hover {
+  background: #f5f5f5;
+}
+
+.datepicker-popup-actions .datepicker-popup-submit {
+  background: #2f60ff;
+  color: #ffffff;
+}
+
+.datepicker-popup-actions .datepicker-popup-submit:hover {
+  background: #1c44d8;
+}
+
 .booking-msg {
-  font-size: 11px;
+  font-size: 10px;
   text-align: center;
+}
+
+.booking-msg .para {
+  font-size: 14px;
 }
 
 .phone {
@@ -962,6 +1037,7 @@ details[open] summary .icon::before {
    MOBILE (max-width: 768px)
 ---------------------------------------------- */
 @media (max-width: 768px) {
+
   .nav-left,
   .nav-right {
     display: none;
@@ -1204,14 +1280,16 @@ details[open] summary .icon::before {
 }
 
 .image-container {
-  background: #f0f0f0; /* Show a light gray background while image loads */
+  background: #f0f0f0;
+  /* Show a light gray background while image loads */
   height: 200px;
   width: 100%;
 }
 
 .travel-container {
   display: grid;
-  grid-template-columns: 3fr 1fr; /* PC Layout */
+  grid-template-columns: 3fr 1fr;
+  /* PC Layout */
   gap: 20px;
 }
 
@@ -1220,7 +1298,8 @@ details[open] summary .icon::before {
   width: 100%;
   height: 100%;
   border-radius: 12px;
-  background-color: #ccd1d1; /* Placeholder color */
+  background-color: #ccd1d1;
+  /* Placeholder color */
 }
 
 /* Card highlight effect to show they are connected */
@@ -1239,111 +1318,115 @@ details[open] summary .icon::before {
 
 /* --- Align nearby-layout with the main page-wrapper --- */
 .nearby-layout {
-    margin-top: 50px;
-    padding-bottom: 50px;
-    align-items: flex-start; 
+  margin-top: 50px;
+  padding-bottom: 50px;
+  align-items: flex-start;
 }
 
 /* --- Resort Grid Setup --- */
 .resort-grid {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(3, 1fr);
-    margin-top: 20px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 20px;
 }
 
 /* --- Favorite Icon Styling --- */
 .image-container {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
 }
 
 .fav-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.7); 
-    border: none;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 10;
-    transition: background 0.3s ease;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s ease;
 }
 
 .fav-btn:hover {
-    background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.9);
 }
 
 .fav-btn.active {
-    background: black;
+  background: black;
 }
 
 
 .map-container {
-    height: 100%;
-    width: 100%;
-    border-radius: 16px;
-    background-color: #e5e3df; /* Map placeholder */
+  height: 100%;
+  width: 100%;
+  border-radius: 16px;
+  background-color: #e5e3df;
+  /* Map placeholder */
 }
 
 #live-map {
   width: 100%;
-  height: calc(100% - 50px); /* Account for header */
-  background-color: #e5e3df; /* Map placeholder color */
+  height: calc(100% - 50px);
+  /* Account for header */
+  background-color: #e5e3df;
+  /* Map placeholder color */
 }
 
 
 /* Update this to match the classes used in your index.html */
 .sidebar-right.sticky-map-wrapper {
-    width: 320px;
-    height: 600px; 
-    position: sticky;
-    top: 32px;
-    overflow: hidden;
+  width: 320px;
+  height: 600px;
+  position: sticky;
+  top: 32px;
+  overflow: hidden;
 }
 
 /* Ensure the map inside the card fills the space */
 .map-card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .map-container {
-    flex: 1; 
-    width: 100%;
+  flex: 1;
+  width: 100%;
 }
+
 /* --- Responsive Column Logic --- */
 
 /* Tablet (Max 1024px): 2 columns per your limit logic */
 @media (max-width: 1024px) {
-    .resort-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .resort-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* Mobile (Max 768px): 1 column & move map below */
 @media (max-width: 768px) {
-    .nearby-layout {
-        flex-direction: column;
-    }
-    
-    .resort-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .sticky-map-wrapper {
-        width: 100% !important;
-        position: static;
-        margin-top: 30px;
-    }
+  .nearby-layout {
+    flex-direction: column;
+  }
+
+  .resort-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sticky-map-wrapper {
+    width: 100% !important;
+    position: static;
+    margin-top: 30px;
+  }
 }
 
 .hotel-card {
@@ -1358,148 +1441,258 @@ details[open] summary .icon::before {
 .hotel-card:hover {
   border-color: var(--gold);
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 /* Container for title and dropdown */
 .header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
-    margin-bottom: 24px;
-    padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 0 10px;
 }
 
 .header-row h2 {
-    font-size: 24px;
-    margin: 0;
-    color: var(--h2_col);
+  font-size: 24px;
+  margin: 0;
+  color: var(--h2_col);
 }
 
 .controls {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .controls label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #080505;
+  font-size: 14px;
+  font-weight: 500;
+  color: #080505;
 }
 
 #sort-selector {
-    padding: 8px 16px;
-    border-radius: 50px;
-    border: 1px solid var(--border);
-    background-color: white;
-    font-family: "Jost", sans-serif;
-    font-size: 14px;
-    cursor: pointer;
-    outline: none;
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 1px solid var(--border);
+  background-color: white;
+  font-family: "Jost", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
 }
 
 .card-content {
-    padding: 20px;
+  padding: 20px;
 }
 
 /* Meta row (Rating and Type) */
 .meta-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-    color: #888;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  color: #888;
 }
 
 .meta-row .rating {
-    color: var(--gold);
-    font-weight: 600;
+  color: var(--gold);
+  font-weight: 600;
 }
 
 /* Property Title */
 .card-content h3 {
-    font-size: 18px;
-    margin: 0 0 8px 0;
-    font-family: "Cormorant Garamond", serif;
-    font-weight: 600;
-    line-height: 1.2;
+  font-size: 18px;
+  margin: 0 0 8px 0;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 /* Amenities Text */
 .amenities {
-    font-size: 13px;
-    color: #555;
-    margin: 8px 0;
-    font-weight: 300;
+  font-size: 13px;
+  color: #555;
+  margin: 8px 0;
+  font-weight: 300;
 }
 
 /* Location Text */
 .location {
-    font-size: 13px;
-    color: #777;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* Footer (Brand and Button) */
 .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 15px;
-    border-top: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
 }
 
 .brand {
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--navy);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--navy);
 }
 
 .btn-availability {
-    background-color: #f7862a;
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 50px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
+  background-color: #f7862a;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .btn-availability:hover {
-    background-color: var(--navy);
+  background-color: var(--navy);
 }
 
 /* Styling for when a marker is clicked and the tile is highlighted */
 .highlight-active {
-    border: 2px solid var(--navy) !important;
-    box-shadow: 0 0 15px rgba(4, 59, 58, 0.4);
-    transform: scale(1.02);
-    transition: all 0.3s ease;
+  border: 2px solid var(--navy) !important;
+  box-shadow: 0 0 15px rgba(4, 59, 58, 0.4);
+  transform: scale(1.02);
+  transition: all 0.3s ease;
 }
 
 /* Format the map info window if supported by your API */
 .map-container {
-    border-left: 1px solid var(--border);
-    background: none;;
+  border-left: 1px solid var(--border);
+  background: none;
+  ;
 }
 
 .price-tag {
-    background-color: white;
-    color: black;
-    font-weight: 700;
-    padding: 4px 8px;
-    border-radius: 4px;
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
+  background-color: white;
+  color: black;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
 }
 
 
+/* Resetting the two-column date row */
+.date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.date-field {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.date-field:hover {
+  border-color: var(--navy);
+}
+
+.date-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #888;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.date-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ccc;
+  /* Default color before selection */
+}
+
+.date-value.has-date {
+  color: var(--navy);
+  /* Color after selection */
+}
+
+.date-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Hotel Datepicker Custom Theme --- */
+
+/* Background and Container */
+.hotel-datepicker {
+  background-color: #ffffff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  border: none !important;
+  font-family: 'Jost', sans-serif !important;
+}
+
+/* Header Text (Month/Year) */
+.hotel-datepicker__month-name {
+  text-transform: uppercase;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+  color: #000;
+}
+
+/* Selected Start and End Dates (Solid Blue) */
+.hotel-datepicker__day--first-day-selected,
+.hotel-datepicker__day--last-day-selected {
+  background-color: #3f51b5 !important;
+  /* Your image's blue */
+  color: #ffffff !important;
+  border-radius: 4px !important;
+}
+
+/* Range Selection (Light Blue) */
+.hotel-datepicker__day--selected {
+  background-color: #e8eaf6 !important;
+  color: #3f51b5 !important;
+}
+
+/* Day Names (SUN, MON, etc.) */
+.hotel-datepicker__day-name {
+  color: #333;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+/* Hide the default close/clear buttons if you want it exactly like the image */
+.hotel-datepicker__topbar {
+  display: none !important;
+}
+
+/* Fix for side-by-side months on Desktop */
+@media (min-width: 768px) {
+  .hotel-datepicker__months {
+    display: flex !important;
+    gap: 20px;
+    padding: 20px;
+  }
+}
+
+/* Update this in styles.css */
+.hotel-datepicker {
+  z-index: 100000 !important;
+  /* Higher than your sticky sidebar and nav */
+  background-color: #ffffff !important;
+  /* ... rest of your theme ... */
+}

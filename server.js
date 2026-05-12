@@ -6,12 +6,12 @@ const app = express();
 const PORT = 3000;
 
 // Serve all static files (html, css, js) from the root directory
-app.use(express.static(__dirname)); 
+app.use(express.static(__dirname));
 
 app.get('/get-property', (req, res) => {
     const sortType = req.query.sort || 'most_popular';
     const limit = parseInt(req.query.limit) || 6;
-    
+
     const fileMap = {
         'most_popular': 'most_popular.json',
         'highest_price': 'highest_price.json',
@@ -22,12 +22,12 @@ app.get('/get-property', (req, res) => {
 
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) return res.status(500).json({ error: "Data file not found" });
-        
+
         try {
             const jsonData = JSON.parse(data);
             const allItems = jsonData.Result.Items; // Full list for markers
             const gridItems = allItems.slice(0, limit); // Limited list for cards
-            
+
             // Send as an object instead of an array
             res.json({
                 all: allItems,

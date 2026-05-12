@@ -13,7 +13,7 @@ async function initMap() {
     try {
         const response = await fetch('/map-config');
         const config = await response.json();
-        
+
         if (!config.apiKey) {
             console.error("API Key missing from .env");
             return;
@@ -47,27 +47,28 @@ async function fetchProperties() {
     const limit = getLimit();
     try {
         const response = await fetch(`/get-property?sort=${sortType}&limit=${limit}`);
-        const data = await response.json(); // data is now {all, grid}
+        const data = await response.json();
         renderProperties(data);
     } catch (error) {
         console.error("Fetch Error:", error);
     }
 }
 
-function renderProperties(items) {
+function renderProperties(data) {
     if (!propertyGrid) return;
-    
+
+    const items = Array.isArray(data) ? data : data.grid || [];
+    const allItems = Array.isArray(data) ? data : data.all || items;
     const favorites = JSON.parse(localStorage.getItem('fav_resorts')) || [];
-    
+
     // 1. Clear old markers from the map before re-rendering
     Object.values(markers).forEach(m => m.setMap(null));
     markers = {};
 
-    // 2. Create map markers for ALL items in the current dataset
-    items.forEach(item => syncMarker(item));
+    // 2. Create map markers for all returned items
+    allItems.forEach(item => syncMarker(item));
 
     // 3. Render HTML only for the properties that should be visible in the grid
-    // Note: The 'items' array already comes limited from the server-side API
     propertyGrid.innerHTML = items.map(item => {
         const isFav = favorites.includes(item.ID);
         const imgUrl = `${IMAGE_SERVICE_URL}${item.Property.FeatureImage}`;
@@ -111,7 +112,7 @@ const ICON_BLUE = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
 function syncMarker(item) {
     if (typeof google === 'undefined' || !map) return;
-    
+
     const lat = parseFloat(item.GeoInfo.Lat);
     const lng = parseFloat(item.GeoInfo.Lng);
 
@@ -128,7 +129,7 @@ function syncMarker(item) {
         Object.values(markers).forEach(m => m.setIcon(ICON_RED));
         // Set this specific pin to Blue
         marker.setIcon(ICON_BLUE);
-        
+
         const tile = document.getElementById(`tile-${item.ID}`);
         if (tile) {
             tile.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -161,11 +162,11 @@ function highlightTile(id) {
     if (tile) {
         // Clear any previous highlights
         document.querySelectorAll('.hotel-card').forEach(card => card.classList.remove('highlight-active'));
-        
+
         // Visual focus
         tile.scrollIntoView({ behavior: 'smooth', block: 'center' });
         tile.classList.add('highlight-active');
-        
+
         // Temporary effect
         setTimeout(() => tile.classList.remove('highlight-active'), 3000);
     }
