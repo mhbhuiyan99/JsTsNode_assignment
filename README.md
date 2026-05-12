@@ -9,17 +9,49 @@ The current implementation includes:
 - nearby property cards and Google Maps markers
 - image gallery modal for viewing property images
 
-## Focus: Image Gallery Task
-The key image task is to implement a modal gallery that opens when the **View All Images** button is clicked.
+## Features
 
-### Expected behavior
-- Clicking the `View All Images` button opens a modal.
-- The modal displays property images fetched from the `/images` asset folder.
-- On desktop, the background page should remain fixed while the modal is open.
-- Clicking outside the modal closes it.
-- On mobile, the gallery should support touch swipe gestures.
-- Next and previous buttons should navigate between images.
-- An image counter should be shown in mobile view.
+### Image Gallery
+- **View All Images** modal that opens when the button is clicked
+- Desktop: background page remains fixed while modal is open
+- Mobile: supports touch swipe gestures for image navigation
+- Next and previous buttons for manual navigation
+- Image counter display in mobile view
+- Click outside modal to close
+
+### Show More/Less
+- Expandable sections in the About and Amenities areas
+- Additional text dynamically inserted when expanded
+- Collapse back to original state with Show Less button
+
+### Date Picker
+- Hotel date range picker using the `HotelDatepicker` library
+- Selected date range auto-populates check-in and check-out fields
+- Initial price set to $2026 per night
+- Total price automatically calculated based on selected date range
+- Past dates are not selectable
+- Check-out date must be at least one day after check-in
+- Single date cannot be selected
+- Popup Submit button finalizes selection and closes the picker
+- Popup Clear button resets the selection
+
+### Nearby Properties Grid
+- Resort cards display with images, ratings, and pricing
+- Sort dropdown with options: Most Popular, Highest Price, Lowest Price
+- Favorites feature with heart icon (❤️ / 🤍)
+- Responsive grid layout
+
+### localStorage
+- Favorites list persists across page reloads
+- Property IDs stored in `fav_resorts` key
+- Adding/removing favorites updates localStorage automatically
+
+### Google Map
+- Property markers displayed on interactive map
+- Hover over a resort card highlights corresponding marker on map
+- Click on map marker highlights and scrolls to corresponding resort card
+- Bidirectional synchronization between grid and map
+
 
 ## Run the project
 1. Install dependencies:
